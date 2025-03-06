@@ -1,5 +1,5 @@
 venv
-restaurant_review/.env
+mysite/.env
 
 # Python # 
 *.py[cod] 
