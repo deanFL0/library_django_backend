@@ -5,18 +5,37 @@ from user.models import User
 class Shelf(models.Model):
     shelf_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
+
+class Publisher(models.Model):
+    publisher_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    address = models.TextField()
+    phone = models.CharField(max_length=15)
+    email = models.EmailField()
+
+class Author(models.Model):
+    author_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=150)
 
 class Book(models.Model):
+    def unknown_author():
+        author, _ = Author.objects.get_or_create(name="Unknown")
+        return author.author_id
+    
+    def unknown_publisher():
+        publisher, _ = Publisher.objects.get_or_create(name="Unknown", address="Unknown", phone="Unknown", email="Unknown")
+        return publisher.publisher_id
+
     book_id = models.AutoField(primary_key=True)
-    book_img = models.ImageField(upload_to='book_images/')
+    book_img = models.ImageField(upload_to='media/book_images/')
     title = models.CharField(max_length=100)
-    author = models.CharField(max_length=100)
-    publisher = models.CharField(max_length=100)
+    author = models.ForeignKey(Author, on_delete=models.SET(unknown_author), related_name="books")
+    publisher = models.ForeignKey(Publisher, on_delete=models.SET(unknown_publisher), related_name="books")
     publication_date = models.DateField()
     isbn = models.CharField(max_length=13)
     copies = models.IntegerField()
-    shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE, related_name="books")
+    shelf = models.ForeignKey(Shelf, on_delete=models.SET_NULL, null=True, related_name="books")
 
     @property
     def available_copies(self):

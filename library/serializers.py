@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Book, Shelf, Loan, FinePayment
+from .models import Book, Shelf, Loan, FinePayment, Publisher, Author
 
 class ShelfSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,6 +11,18 @@ class ShelfSerializer(serializers.ModelSerializer):
             "description",
         )
         read_only_fields = ("shelf_id",)
+
+class PublisherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Publisher
+        fields = (
+            "publisher_id",
+            "name",
+            "address",
+            "phone",
+            "email",
+        )
+        read_only_fields = ("publisher_id",)
     
 class BookSerializer(serializers.ModelSerializer):
     available_copies = serializers.ReadOnlyField()
