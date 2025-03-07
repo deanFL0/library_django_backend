@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.hashers import check_password
 
 from .models import User
 
@@ -65,5 +66,17 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
     
 class ChangePasswordSerializer(serializers.Serializer):
-        old_password = serializers.CharField(required=True)
-        new_password = serializers.CharField(required=True)
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not check_password(value, user.password):
+            raise serializers.ValidationError("Old password is incorrect.")
+        return value
+    
+    def validate(self, data):
+        """Validate that new_password is different from old_password"""
+        if data['old_password'] == data['new_password']:
+            raise serializers.ValidationError({"new_password": "New password must be different from old password."})
+        return data

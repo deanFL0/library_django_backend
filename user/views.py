@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import MethodNotAllowed
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from .models import User
 from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer
@@ -15,9 +15,11 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = "username"
 
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action == 'register':
             permission_classes = [AllowAny]
-        elif self.action in ['update', 'partial_update', 'destroy']:
+        elif self.action in ['reactivate']:
+            permission_classes = [IsAdmin]
+        elif self.action in ['retrieve', 'destroy','change_password']:
             permission_classes = [IsOwnerOrAdmin]
         else:
             permission_classes = [IsAdmin]
@@ -46,7 +48,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def change_password(self, request, username=None):
         """Change user password"""
         user = self.get_object()
-        serializer = ChangePasswordSerializer(data=request.data)
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user.set_password(serializer.validated_data['new_password'])
         user.save()
