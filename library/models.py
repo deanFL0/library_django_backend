@@ -49,9 +49,9 @@ class Loan(models.Model):
         OVERDUE = "overdue", "Overdue"
 
     loan_id = models.AutoField(primary_key=True)
-    loan_date = models.DateField()
+    loan_date = models.DateField(auto_now_add=True)
     due_date = models.DateField()
-    return_date = models.DateField()
+    return_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=10, choices=LoanStatus.choices, default=LoanStatus.BORROWED)
     fine_amount = models.IntegerField()
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="loans")
@@ -61,22 +61,23 @@ class Loan(models.Model):
 
     @property
     def is_overdue(self):
-        return self.return_date > self.due_date
+        if self.return_date:
+            return self.return_date > self.due_date
+        return False
     
     def calculate_fine(self):
         daily_rate = 0.15
 
-        if self.is_overdue():
+        # Directly check if the book is overdue instead of using self.is_overdue
+        if self.return_date and self.due_date and self.return_date > self.due_date:
             overdue_days = (self.return_date - self.due_date).days
-            self.fine_amount = round(overdue_days * daily_rate, 2)
+            return round(overdue_days * daily_rate, 2)
         else:
-            self.fine_amount = 0
-
-        self.save(update_fields=['fine_amount'])
+            return 0.00
 
     def save(self, *args, **kwargs):
         """Override save method to check fine before saving."""
-        self.calculate_fine()
+        self.fine_amount = self.calculate_fine()
         super().save(*args, **kwargs)
 
 class FinePayment(models.Model):

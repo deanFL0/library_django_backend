@@ -60,7 +60,7 @@ class LoanSerializer(serializers.ModelSerializer):
             "is_overdue",
             "created_at",
         )
-        read_only_fields = ("loan_id", "fine_amount", "is_overdue", "created_at")
+        read_only_fields = ("loan_id", "loan_date", "fine_amount", "is_overdue", "created_at")
 
 class FinePaymentSerializer(serializers.ModelSerializer):
     class Meta:
