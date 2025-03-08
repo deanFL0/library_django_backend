@@ -55,8 +55,8 @@ class LoanViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.action == 'list' and self.request.user.role == 'user':
-            return Loan.objects.filter(user=self.request.user)
-        return Loan.objects.all()
+            return Loan.objects.filter(user=self.request.user).prefetch_related('fine_payments')
+        return Loan.objects.prefetch_related('fine_payments')
     
     def perform_create(self, serializer):
         book = serializer.validated_data["book"]
@@ -68,3 +68,22 @@ class LoanViewSet(viewsets.ModelViewSet):
             if borrowed_count >= book.available_copies:
                 raise ValidationError("No available copies of this book")
             serializer.save()
+
+class FinePaymentViewSet(viewsets.ModelViewSet):
+    queryset = FinePayment.objects.all()
+    serializer_class = FinePaymentSerializer
+    permission_classes = [IsLibrarian]
+
+    def perform_create(self, serializer):
+        loan = serializer.validated_data["loan"]
+        loan.refresh_from_db()
+
+        # add user uuid from loan to fine payment
+        serializer.validated_data["user"] = loan.user
+
+        if loan.is_paid:
+            raise ValidationError("This loan has already been paid")
+
+        loan.is_paid = True
+        loan.save()
+        serializer.save()

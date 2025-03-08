@@ -43,8 +43,21 @@ class BookSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("book_id", "available_copies")
 
+class FinePaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FinePayment
+        fields = (
+            "payment_id",
+            "amount_paid",
+            "payment_date",
+            "loan",
+            "user",
+        )
+        read_only_fields = ("payment_id", "payment_date", "user",)
+
 class LoanSerializer(serializers.ModelSerializer):
     is_overdue = serializers.ReadOnlyField()
+    fine_payments = FinePaymentSerializer(many=True, read_only=True)
     
     class Meta:
         model = Loan
@@ -55,20 +68,11 @@ class LoanSerializer(serializers.ModelSerializer):
             "return_date",
             "status",
             "fine_amount",
+            "is_paid",
             "book",
             "user",
             "is_overdue",
             "created_at",
+            "fine_payments",
         )
-        read_only_fields = ("loan_id", "loan_date", "fine_amount", "is_overdue", "created_at")
-
-class FinePaymentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FinePayment
-        fields = (
-            "payment_id",
-            "loan",
-            "amount",
-            "payment_date",
-        )
-        read_only_fields = ("payment_id",)
+        read_only_fields = ("loan_id", "loan_date", "fine_amount", "is_paid", "is_overdue", "created_at")
