@@ -12,6 +12,15 @@ class ShelfSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("shelf_id",)
 
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = (
+            "author_id",
+            "name",
+        )
+        read_only_fields = ("author_id",)
+
 class PublisherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher

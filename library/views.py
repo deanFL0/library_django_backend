@@ -6,12 +6,17 @@ from rest_framework.exceptions import ValidationError
 from django.db import transaction
 
 from .models import Book, Shelf, Loan, FinePayment, Publisher, Author
-from .serializers import BookSerializer, ShelfSerializer, LoanSerializer, FinePaymentSerializer, PublisherSerializer
+from .serializers import BookSerializer, ShelfSerializer, LoanSerializer, FinePaymentSerializer, PublisherSerializer, AuthorSerializer
 from user.permissions import IsAdmin, IsLibrarian, IsUser, IsOwner, IsOwnerOrLibrarian
 
 class ShelfViewSet(viewsets.ModelViewSet):
     queryset = Shelf.objects.all()
     serializer_class = ShelfSerializer
+    permission_classes = [IsLibrarian]
+
+class AuthorViewSet(viewsets.ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
     permission_classes = [IsLibrarian]
 
 class PublisherViewSet(viewsets.ModelViewSet):
