@@ -7,7 +7,7 @@ from django.db import transaction
 
 from .models import Book, Shelf, Loan, FinePayment, Publisher, Author
 from .serializers import BookSerializer, ShelfSerializer, LoanSerializer, FinePaymentSerializer, PublisherSerializer, AuthorSerializer
-from user.permissions import IsAdmin, IsLibrarian, IsUser, IsOwner, IsOwnerOrLibrarian
+from user.permissions import IsLibrarian, IsOwnerOrLibrarian
 
 class ShelfViewSet(viewsets.ModelViewSet):
     queryset = Shelf.objects.all()
@@ -27,7 +27,14 @@ class PublisherViewSet(viewsets.ModelViewSet):
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsLibrarian]
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsLibrarian]
+            
+        return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
         author_name = request.data.get("author")

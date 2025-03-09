@@ -17,8 +17,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'register':
             permission_classes = [AllowAny]
-        elif self.action in ['reactivate']:
-            permission_classes = [IsAdmin]
         elif self.action in ['retrieve', 'destroy','change_password']:
             permission_classes = [IsOwnerOrAdmin]
         else:
