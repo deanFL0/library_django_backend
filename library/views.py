@@ -8,25 +8,30 @@ from django.db import transaction
 from .models import Book, Shelf, Loan, FinePayment, Publisher, Author
 from .serializers import BookSerializer, ShelfSerializer, LoanSerializer, FinePaymentSerializer, PublisherSerializer, AuthorSerializer
 from user.permissions import IsLibrarian, IsOwnerOrLibrarian
+from .filters import ShelfFilter, AuthorFilter, PublisherFilter, BookFilter
 
 class ShelfViewSet(viewsets.ModelViewSet):
     queryset = Shelf.objects.all()
     serializer_class = ShelfSerializer
     permission_classes = [IsLibrarian]
+    filterset_class = ShelfFilter
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_classes = [IsLibrarian]
+    filterset_class = AuthorFilter
 
 class PublisherViewSet(viewsets.ModelViewSet):
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
     permission_classes = [IsLibrarian]
+    filterset_class = PublisherFilter
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    filterset_class = BookFilter
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:

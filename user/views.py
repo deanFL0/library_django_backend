@@ -8,11 +8,13 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User
 from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer
 from .permissions import IsAdmin, IsOwnerOrAdmin
+from .filters import UserFilter
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = "username"
+    filterset_class = UserFilter
 
     def get_permissions(self):
         if self.action == 'register':
