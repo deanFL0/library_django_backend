@@ -91,6 +91,9 @@ class FinePaymentViewSet(viewsets.ModelViewSet):
     serializer_class = FinePaymentSerializer
     permission_classes = [IsLibrarian]
 
+    def get_queryset(self):
+        return FinePayment.objects.filter(loan=self.kwargs["loan_pk"])
+
     def perform_create(self, serializer):
         loan = serializer.validated_data["loan"]
         loan.refresh_from_db()
@@ -100,7 +103,15 @@ class FinePaymentViewSet(viewsets.ModelViewSet):
 
         if loan.is_paid:
             raise ValidationError("This loan has already been paid")
-
-        loan.is_paid = True
+        
         loan.save()
         serializer.save()
+    
+    def update(self, request, *args, **kwargs):
+        raise ValidationError("Method not allowed")
+    
+    def partial_update(self, request, *args, **kwargs):
+        raise ValidationError("Method not allowed")
+    
+    def destroy(self, request, *args, **kwargs):
+        raise ValidationError("Method not allowed")
