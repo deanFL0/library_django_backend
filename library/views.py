@@ -8,7 +8,7 @@ from django.db import transaction
 from .models import Book, Shelf, Loan, FinePayment, Publisher, Author
 from .serializers import BookSerializer, ShelfSerializer, LoanSerializer, FinePaymentSerializer, PublisherSerializer, AuthorSerializer
 from user.permissions import IsLibrarian, IsOwnerOrLibrarian
-from .filters import ShelfFilter, AuthorFilter, PublisherFilter, BookFilter
+from .filters import ShelfFilter, AuthorFilter, PublisherFilter, BookFilter, LoanFilter
 
 class ShelfViewSet(viewsets.ModelViewSet):
     queryset = Shelf.objects.all()
@@ -61,6 +61,7 @@ class BookViewSet(viewsets.ModelViewSet):
 class LoanViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
+    filterset_class = LoanFilter
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
