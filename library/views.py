@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import ValidationError
 from django.db import transaction
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from .models import Book, Shelf, Loan, FinePayment, Publisher, Author
 from .serializers import BookSerializer, ShelfSerializer, LoanSerializer, FinePaymentSerializer, PublisherSerializer, AuthorSerializer
@@ -15,6 +17,10 @@ class ShelfViewSet(viewsets.ModelViewSet):
     serializer_class = ShelfSerializer
     permission_classes = [IsLibrarian]
     filterset_class = ShelfFilter
+
+    @method_decorator(cache_page(60*10, key_prefix='shelf_list'))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
@@ -40,6 +46,10 @@ class BookViewSet(viewsets.ModelViewSet):
             permission_classes = [IsLibrarian]
             
         return [permission() for permission in permission_classes]
+    
+    @method_decorator(cache_page(60*10, key_prefix='book_list'))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         author_name = request.data.get("author")
@@ -76,6 +86,10 @@ class LoanViewSet(viewsets.ModelViewSet):
             return Loan.objects.filter(user=self.request.user).prefetch_related('fine_payments')
         return Loan.objects.prefetch_related('fine_payments')
     
+    @method_decorator(cache_page(60*10, key_prefix='loan_list'))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         book = serializer.validated_data["book"]
 

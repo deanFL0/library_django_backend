@@ -3,7 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import MethodNotAllowed
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from .models import User
 from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer
@@ -25,6 +27,10 @@ class UserViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAdmin]
         return [permission() for permission in permission_classes]
 
+    @method_decorator(cache_page(60*10, key_prefix='user_list'))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
     def create(self, request, *args, **kwargs):
         raise MethodNotAllowed("POST", "Use the /users/register/ endpoint to create users.")
     
