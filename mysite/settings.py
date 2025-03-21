@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django_filters',
     "user",
     "library",
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -145,7 +146,8 @@ REST_FRAMEWORK = {
         'anon': '15/min',
         'burst': '60/min',
         'sustained': '500/day'
-    }
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {

@@ -1,0 +1,2231 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /api/v1/authors/:
+    get:
+      operationId: authors_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - in: query
+        name: name__icontains
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: ordering
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - -name
+            - name
+        description: |-
+          Ordering
+
+          * `name` - Name
+          * `-name` - Name (descending)
+        explode: false
+        style: form
+      tags:
+      - authors
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuthorList'
+          description: ''
+    post:
+      operationId: authors_create
+      tags:
+      - authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Author'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Author'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Author'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+          description: ''
+  /api/v1/authors/{author_id}/:
+    get:
+      operationId: authors_retrieve
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this author.
+        required: true
+      tags:
+      - authors
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+          description: ''
+    put:
+      operationId: authors_update
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this author.
+        required: true
+      tags:
+      - authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Author'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Author'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Author'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+          description: ''
+    patch:
+      operationId: authors_partial_update
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this author.
+        required: true
+      tags:
+      - authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAuthor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAuthor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAuthor'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+          description: ''
+    delete:
+      operationId: authors_destroy
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this author.
+        required: true
+      tags:
+      - authors
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/books/:
+    get:
+      operationId: books_list
+      parameters:
+      - in: query
+        name: author
+        schema:
+          type: string
+      - in: query
+        name: copies
+        schema:
+          type: integer
+      - in: query
+        name: copies__gt
+        schema:
+          type: integer
+      - in: query
+        name: copies__lt
+        schema:
+          type: integer
+      - in: query
+        name: isbn
+        schema:
+          type: string
+      - in: query
+        name: isbn__icontains
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: ordering
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - -author
+            - -copies
+            - -publication_date
+            - -publisher
+            - -shelf
+            - -title
+            - author
+            - copies
+            - publication_date
+            - publisher
+            - shelf
+            - title
+        description: |-
+          Ordering
+
+          * `title` - Title
+          * `-title` - Title (descending)
+          * `author` - Author
+          * `-author` - Author (descending)
+          * `publisher` - Publisher
+          * `-publisher` - Publisher (descending)
+          * `publication_date` - Publication date
+          * `-publication_date` - Publication date (descending)
+          * `copies` - Copies
+          * `-copies` - Copies (descending)
+          * `shelf` - Shelf
+          * `-shelf` - Shelf (descending)
+        explode: false
+        style: form
+      - in: query
+        name: publication_date
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: publication_date__year__gt
+        schema:
+          type: number
+      - in: query
+        name: publication_date__year__lt
+        schema:
+          type: number
+      - in: query
+        name: publisher
+        schema:
+          type: string
+      - in: query
+        name: shelf
+        schema:
+          type: string
+      - in: query
+        name: title
+        schema:
+          type: string
+      - in: query
+        name: title__icontains
+        schema:
+          type: string
+      tags:
+      - books
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBookList'
+          description: ''
+    post:
+      operationId: books_create
+      tags:
+      - books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Book'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
+  /api/v1/books/{book_id}/:
+    get:
+      operationId: books_retrieve
+      parameters:
+      - in: path
+        name: book_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this book.
+        required: true
+      tags:
+      - books
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
+    put:
+      operationId: books_update
+      parameters:
+      - in: path
+        name: book_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this book.
+        required: true
+      tags:
+      - books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Book'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
+    patch:
+      operationId: books_partial_update
+      parameters:
+      - in: path
+        name: book_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this book.
+        required: true
+      tags:
+      - books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBook'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
+    delete:
+      operationId: books_destroy
+      parameters:
+      - in: path
+        name: book_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this book.
+        required: true
+      tags:
+      - books
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/loans/:
+    get:
+      operationId: loans_list
+      parameters:
+      - in: query
+        name: book
+        schema:
+          type: string
+      - in: query
+        name: due_date
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: due_date__gt
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: due_date__lt
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: fine_amount
+        schema:
+          type: number
+          format: float
+      - in: query
+        name: fine_amount__gt
+        schema:
+          type: number
+          format: float
+      - in: query
+        name: fine_amount__lt
+        schema:
+          type: number
+          format: float
+      - in: query
+        name: is_paid
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: loan_date
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: loan_date__gt
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: loan_date__lt
+        schema:
+          type: string
+          format: date
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: ordering
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - -due_date
+            - -fine_amount
+            - -is_paid
+            - -loan_date
+            - -return_date
+            - due_date
+            - fine_amount
+            - is_paid
+            - loan_date
+            - return_date
+        description: |-
+          Ordering
+
+          * `loan_date` - Loan date
+          * `-loan_date` - Loan date (descending)
+          * `due_date` - Due date
+          * `-due_date` - Due date (descending)
+          * `return_date` - Return date
+          * `-return_date` - Return date (descending)
+          * `fine_amount` - Fine amount
+          * `-fine_amount` - Fine amount (descending)
+          * `is_paid` - Is paid
+          * `-is_paid` - Is paid (descending)
+        explode: false
+        style: form
+      - in: query
+        name: return_date
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: return_date__gt
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: return_date__lt
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - borrowed
+          - returned
+        description: |-
+          * `borrowed` - Borrowed
+          * `returned` - Returned
+      - in: query
+        name: user
+        schema:
+          type: string
+      tags:
+      - loans
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLoanList'
+          description: ''
+    post:
+      operationId: loans_create
+      tags:
+      - loans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Loan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Loan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Loan'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+          description: ''
+  /api/v1/loans/{loan_pk}/fine-payments/:
+    get:
+      operationId: loans_fine_payments_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: path
+        name: loan_pk
+        schema:
+          type: integer
+        required: true
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - loans
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFinePaymentList'
+          description: ''
+    post:
+      operationId: loans_fine_payments_create
+      parameters:
+      - in: path
+        name: loan_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - loans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinePayment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FinePayment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FinePayment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinePayment'
+          description: ''
+  /api/v1/loans/{loan_pk}/fine-payments/{payment_id}/:
+    get:
+      operationId: loans_fine_payments_retrieve
+      parameters:
+      - in: path
+        name: loan_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: payment_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this fine payment.
+        required: true
+      tags:
+      - loans
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinePayment'
+          description: ''
+    put:
+      operationId: loans_fine_payments_update
+      parameters:
+      - in: path
+        name: loan_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: payment_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this fine payment.
+        required: true
+      tags:
+      - loans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinePayment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FinePayment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FinePayment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinePayment'
+          description: ''
+    patch:
+      operationId: loans_fine_payments_partial_update
+      parameters:
+      - in: path
+        name: loan_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: payment_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this fine payment.
+        required: true
+      tags:
+      - loans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedFinePayment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedFinePayment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedFinePayment'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinePayment'
+          description: ''
+    delete:
+      operationId: loans_fine_payments_destroy
+      parameters:
+      - in: path
+        name: loan_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: payment_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this fine payment.
+        required: true
+      tags:
+      - loans
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/loans/{loan_id}/:
+    get:
+      operationId: loans_retrieve
+      parameters:
+      - in: path
+        name: loan_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this loan.
+        required: true
+      tags:
+      - loans
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+          description: ''
+    put:
+      operationId: loans_update
+      parameters:
+      - in: path
+        name: loan_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this loan.
+        required: true
+      tags:
+      - loans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Loan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Loan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Loan'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+          description: ''
+    patch:
+      operationId: loans_partial_update
+      parameters:
+      - in: path
+        name: loan_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this loan.
+        required: true
+      tags:
+      - loans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLoan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLoan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLoan'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+          description: ''
+    delete:
+      operationId: loans_destroy
+      parameters:
+      - in: path
+        name: loan_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this loan.
+        required: true
+      tags:
+      - loans
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/publishers/:
+    get:
+      operationId: publishers_list
+      parameters:
+      - in: query
+        name: email
+        schema:
+          type: string
+      - in: query
+        name: email__icontains
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - in: query
+        name: name__icontains
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: ordering
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - -email
+            - -name
+            - email
+            - name
+        description: |-
+          Ordering
+
+          * `name` - Name
+          * `-name` - Name (descending)
+          * `email` - Email
+          * `-email` - Email (descending)
+        explode: false
+        style: form
+      tags:
+      - publishers
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPublisherList'
+          description: ''
+    post:
+      operationId: publishers_create
+      tags:
+      - publishers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Publisher'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Publisher'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Publisher'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publisher'
+          description: ''
+  /api/v1/publishers/{publisher_id}/:
+    get:
+      operationId: publishers_retrieve
+      parameters:
+      - in: path
+        name: publisher_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this publisher.
+        required: true
+      tags:
+      - publishers
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publisher'
+          description: ''
+    put:
+      operationId: publishers_update
+      parameters:
+      - in: path
+        name: publisher_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this publisher.
+        required: true
+      tags:
+      - publishers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Publisher'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Publisher'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Publisher'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publisher'
+          description: ''
+    patch:
+      operationId: publishers_partial_update
+      parameters:
+      - in: path
+        name: publisher_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this publisher.
+        required: true
+      tags:
+      - publishers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPublisher'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPublisher'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPublisher'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publisher'
+          description: ''
+    delete:
+      operationId: publishers_destroy
+      parameters:
+      - in: path
+        name: publisher_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this publisher.
+        required: true
+      tags:
+      - publishers
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/shelves/:
+    get:
+      operationId: shelves_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - in: query
+        name: name__icontains
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: ordering
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - -name
+            - name
+        description: |-
+          Ordering
+
+          * `name` - Name
+          * `-name` - Name (descending)
+        explode: false
+        style: form
+      tags:
+      - shelves
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedShelfList'
+          description: ''
+    post:
+      operationId: shelves_create
+      tags:
+      - shelves
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shelf'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Shelf'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Shelf'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shelf'
+          description: ''
+  /api/v1/shelves/{shelf_id}/:
+    get:
+      operationId: shelves_retrieve
+      parameters:
+      - in: path
+        name: shelf_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this shelf.
+        required: true
+      tags:
+      - shelves
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shelf'
+          description: ''
+    put:
+      operationId: shelves_update
+      parameters:
+      - in: path
+        name: shelf_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this shelf.
+        required: true
+      tags:
+      - shelves
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shelf'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Shelf'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Shelf'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shelf'
+          description: ''
+    patch:
+      operationId: shelves_partial_update
+      parameters:
+      - in: path
+        name: shelf_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this shelf.
+        required: true
+      tags:
+      - shelves
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedShelf'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedShelf'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedShelf'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shelf'
+          description: ''
+    delete:
+      operationId: shelves_destroy
+      parameters:
+      - in: path
+        name: shelf_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this shelf.
+        required: true
+      tags:
+      - shelves
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/token/:
+    post:
+      operationId: token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/v1/token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/users/:
+    get:
+      operationId: users_list
+      parameters:
+      - in: query
+        name: email
+        schema:
+          type: string
+      - in: query
+        name: email__icontains
+        schema:
+          type: string
+      - in: query
+        name: first_name
+        schema:
+          type: string
+      - in: query
+        name: first_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: is_active
+        schema:
+          type: boolean
+      - in: query
+        name: is_staff
+        schema:
+          type: boolean
+      - in: query
+        name: last_name
+        schema:
+          type: string
+      - in: query
+        name: last_name__icontains
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: ordering
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - -date_joined
+            - -email
+            - -first_name
+            - -is_active
+            - -last_name
+            - -role
+            - -username
+            - date_joined
+            - email
+            - first_name
+            - is_active
+            - last_name
+            - role
+            - username
+        description: |-
+          Ordering
+
+          * `username` - Username
+          * `-username` - Username (descending)
+          * `email` - Email
+          * `-email` - Email (descending)
+          * `first_name` - First name
+          * `-first_name` - First name (descending)
+          * `last_name` - Last name
+          * `-last_name` - Last name (descending)
+          * `role` - Role
+          * `-role` - Role (descending)
+          * `is_active` - Is active
+          * `-is_active` - Is active (descending)
+          * `date_joined` - Date joined
+          * `-date_joined` - Date joined (descending)
+        explode: false
+        style: form
+      - in: query
+        name: role
+        schema:
+          type: string
+          enum:
+          - admin
+          - librarian
+          - user
+        description: |-
+          * `user` - User
+          * `librarian` - Librarian
+          * `admin` - Admin
+      - in: query
+        name: username
+        schema:
+          type: string
+      - in: query
+        name: username__icontains
+        schema:
+          type: string
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+    post:
+      operationId: users_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/users/{username}/:
+    get:
+      operationId: users_retrieve
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: users_update
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: users_destroy
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/users/{username}/change_password/:
+    post:
+      operationId: users_change_password_create
+      description: Change user password
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/users/{username}/reactivate/:
+    post:
+      operationId: users_reactivate_create
+      description: Reactivate a deactivated user
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/users/register/:
+    post:
+      operationId: users_register_create
+      description: Public registration endpoint
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+components:
+  schemas:
+    Author:
+      type: object
+      properties:
+        author_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+      required:
+      - author_id
+      - name
+    Book:
+      type: object
+      properties:
+        book_id:
+          type: integer
+          readOnly: true
+        book_img:
+          type: string
+          format: uri
+        title:
+          type: string
+          maxLength: 100
+        author:
+          type: integer
+        publisher:
+          type: integer
+        publication_date:
+          type: string
+          format: date
+        isbn:
+          type: string
+          maxLength: 13
+        copies:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        shelf:
+          type: integer
+          nullable: true
+        available_copies:
+          type: string
+          readOnly: true
+      required:
+      - author
+      - available_copies
+      - book_id
+      - book_img
+      - copies
+      - isbn
+      - publication_date
+      - publisher
+      - title
+    FinePayment:
+      type: object
+      properties:
+        payment_id:
+          type: integer
+          readOnly: true
+        amount_paid:
+          type: number
+          format: double
+        payment_date:
+          type: string
+          format: date
+          readOnly: true
+        loan:
+          type: integer
+        user:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - amount_paid
+      - loan
+      - payment_date
+      - payment_id
+      - user
+    Loan:
+      type: object
+      properties:
+        loan_id:
+          type: integer
+          readOnly: true
+        loan_date:
+          type: string
+          format: date
+          readOnly: true
+        due_date:
+          type: string
+          format: date
+        return_date:
+          type: string
+          format: date
+          nullable: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        fine_amount:
+          type: number
+          format: double
+          readOnly: true
+        is_paid:
+          type: boolean
+          readOnly: true
+        book:
+          type: integer
+        user:
+          type: string
+          format: uuid
+        is_overdue:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        fine_payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinePayment'
+          readOnly: true
+      required:
+      - book
+      - created_at
+      - due_date
+      - fine_amount
+      - fine_payments
+      - is_overdue
+      - is_paid
+      - loan_date
+      - loan_id
+      - user
+    PaginatedAuthorList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
+    PaginatedBookList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+    PaginatedFinePaymentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinePayment'
+    PaginatedLoanList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Loan'
+    PaginatedPublisherList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Publisher'
+    PaginatedShelfList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Shelf'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PatchedAuthor:
+      type: object
+      properties:
+        author_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+    PatchedBook:
+      type: object
+      properties:
+        book_id:
+          type: integer
+          readOnly: true
+        book_img:
+          type: string
+          format: uri
+        title:
+          type: string
+          maxLength: 100
+        author:
+          type: integer
+        publisher:
+          type: integer
+        publication_date:
+          type: string
+          format: date
+        isbn:
+          type: string
+          maxLength: 13
+        copies:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        shelf:
+          type: integer
+          nullable: true
+        available_copies:
+          type: string
+          readOnly: true
+    PatchedFinePayment:
+      type: object
+      properties:
+        payment_id:
+          type: integer
+          readOnly: true
+        amount_paid:
+          type: number
+          format: double
+        payment_date:
+          type: string
+          format: date
+          readOnly: true
+        loan:
+          type: integer
+        user:
+          type: string
+          format: uuid
+          readOnly: true
+    PatchedLoan:
+      type: object
+      properties:
+        loan_id:
+          type: integer
+          readOnly: true
+        loan_date:
+          type: string
+          format: date
+          readOnly: true
+        due_date:
+          type: string
+          format: date
+        return_date:
+          type: string
+          format: date
+          nullable: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        fine_amount:
+          type: number
+          format: double
+          readOnly: true
+        is_paid:
+          type: boolean
+          readOnly: true
+        book:
+          type: integer
+        user:
+          type: string
+          format: uuid
+        is_overdue:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        fine_payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinePayment'
+          readOnly: true
+    PatchedPublisher:
+      type: object
+      properties:
+        publisher_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        address:
+          type: string
+        phone:
+          type: string
+          maxLength: 15
+        email:
+          type: string
+          format: email
+          maxLength: 254
+    PatchedShelf:
+      type: object
+      properties:
+        shelf_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+    PatchedUser:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 50
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 50
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+        is_active:
+          type: boolean
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+    Publisher:
+      type: object
+      properties:
+        publisher_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        address:
+          type: string
+        phone:
+          type: string
+          maxLength: 15
+        email:
+          type: string
+          format: email
+          maxLength: 254
+      required:
+      - address
+      - email
+      - name
+      - phone
+      - publisher_id
+    RoleEnum:
+      enum:
+      - user
+      - librarian
+      - admin
+      type: string
+      description: |-
+        * `user` - User
+        * `librarian` - Librarian
+        * `admin` - Admin
+    Shelf:
+      type: object
+      properties:
+        shelf_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+      required:
+      - name
+      - shelf_id
+    StatusEnum:
+      enum:
+      - borrowed
+      - returned
+      type: string
+      description: |-
+        * `borrowed` - Borrowed
+        * `returned` - Returned
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    User:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 50
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 50
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+        is_active:
+          type: boolean
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - date_joined
+      - email
+      - first_name
+      - is_active
+      - last_login
+      - role
+      - user_id
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
