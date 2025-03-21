@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 
 from user.models import User
 
@@ -39,6 +41,7 @@ class Book(models.Model):
     shelf = models.ForeignKey(Shelf, on_delete=models.SET_NULL, null=True, related_name="books")
 
     @property
+    @extend_schema_field(serializers.IntegerField())
     def available_copies(self):
         borrowed_count = self.loans.filter(return_date__isnull=True).count()
         return self.copies - borrowed_count
@@ -61,6 +64,7 @@ class Loan(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
+    @extend_schema_field(serializers.BooleanField())
     def is_overdue(self):
         if self.return_date:
             return self.return_date > self.due_date

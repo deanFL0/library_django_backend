@@ -3,9 +3,154 @@ info:
   title: ''
   version: 0.0.0
 paths:
+  /api/schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
   /api/v1/authors/:
     get:
-      operationId: authors_list
+      operationId: v1_authors_list
       parameters:
       - name: limit
         required: false
@@ -44,7 +189,7 @@ paths:
         explode: false
         style: form
       tags:
-      - authors
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -55,9 +200,9 @@ paths:
                 $ref: '#/components/schemas/PaginatedAuthorList'
           description: ''
     post:
-      operationId: authors_create
+      operationId: v1_authors_create
       tags:
-      - authors
+      - v1
       requestBody:
         content:
           application/json:
@@ -81,7 +226,7 @@ paths:
           description: ''
   /api/v1/authors/{author_id}/:
     get:
-      operationId: authors_retrieve
+      operationId: v1_authors_retrieve
       parameters:
       - in: path
         name: author_id
@@ -90,7 +235,7 @@ paths:
         description: A unique integer value identifying this author.
         required: true
       tags:
-      - authors
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -101,7 +246,7 @@ paths:
                 $ref: '#/components/schemas/Author'
           description: ''
     put:
-      operationId: authors_update
+      operationId: v1_authors_update
       parameters:
       - in: path
         name: author_id
@@ -110,7 +255,7 @@ paths:
         description: A unique integer value identifying this author.
         required: true
       tags:
-      - authors
+      - v1
       requestBody:
         content:
           application/json:
@@ -133,7 +278,7 @@ paths:
                 $ref: '#/components/schemas/Author'
           description: ''
     patch:
-      operationId: authors_partial_update
+      operationId: v1_authors_partial_update
       parameters:
       - in: path
         name: author_id
@@ -142,7 +287,7 @@ paths:
         description: A unique integer value identifying this author.
         required: true
       tags:
-      - authors
+      - v1
       requestBody:
         content:
           application/json:
@@ -164,7 +309,7 @@ paths:
                 $ref: '#/components/schemas/Author'
           description: ''
     delete:
-      operationId: authors_destroy
+      operationId: v1_authors_destroy
       parameters:
       - in: path
         name: author_id
@@ -173,7 +318,7 @@ paths:
         description: A unique integer value identifying this author.
         required: true
       tags:
-      - authors
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -181,7 +326,7 @@ paths:
           description: No response body
   /api/v1/books/:
     get:
-      operationId: books_list
+      operationId: v1_books_list
       parameters:
       - in: query
         name: author
@@ -285,7 +430,7 @@ paths:
         schema:
           type: string
       tags:
-      - books
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -297,9 +442,9 @@ paths:
                 $ref: '#/components/schemas/PaginatedBookList'
           description: ''
     post:
-      operationId: books_create
+      operationId: v1_books_create
       tags:
-      - books
+      - v1
       requestBody:
         content:
           application/json:
@@ -323,7 +468,7 @@ paths:
           description: ''
   /api/v1/books/{book_id}/:
     get:
-      operationId: books_retrieve
+      operationId: v1_books_retrieve
       parameters:
       - in: path
         name: book_id
@@ -332,7 +477,7 @@ paths:
         description: A unique integer value identifying this book.
         required: true
       tags:
-      - books
+      - v1
       security:
       - jwtAuth: []
       - {}
@@ -344,7 +489,7 @@ paths:
                 $ref: '#/components/schemas/Book'
           description: ''
     put:
-      operationId: books_update
+      operationId: v1_books_update
       parameters:
       - in: path
         name: book_id
@@ -353,7 +498,7 @@ paths:
         description: A unique integer value identifying this book.
         required: true
       tags:
-      - books
+      - v1
       requestBody:
         content:
           application/json:
@@ -376,7 +521,7 @@ paths:
                 $ref: '#/components/schemas/Book'
           description: ''
     patch:
-      operationId: books_partial_update
+      operationId: v1_books_partial_update
       parameters:
       - in: path
         name: book_id
@@ -385,7 +530,7 @@ paths:
         description: A unique integer value identifying this book.
         required: true
       tags:
-      - books
+      - v1
       requestBody:
         content:
           application/json:
@@ -407,7 +552,7 @@ paths:
                 $ref: '#/components/schemas/Book'
           description: ''
     delete:
-      operationId: books_destroy
+      operationId: v1_books_destroy
       parameters:
       - in: path
         name: book_id
@@ -416,7 +561,7 @@ paths:
         description: A unique integer value identifying this book.
         required: true
       tags:
-      - books
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -424,7 +569,7 @@ paths:
           description: No response body
   /api/v1/loans/:
     get:
-      operationId: loans_list
+      operationId: v1_loans_list
       parameters:
       - in: query
         name: book
@@ -553,7 +698,7 @@ paths:
         schema:
           type: string
       tags:
-      - loans
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -564,9 +709,9 @@ paths:
                 $ref: '#/components/schemas/PaginatedLoanList'
           description: ''
     post:
-      operationId: loans_create
+      operationId: v1_loans_create
       tags:
-      - loans
+      - v1
       requestBody:
         content:
           application/json:
@@ -590,7 +735,7 @@ paths:
           description: ''
   /api/v1/loans/{loan_pk}/fine-payments/:
     get:
-      operationId: loans_fine_payments_list
+      operationId: v1_loans_fine_payments_list
       parameters:
       - name: limit
         required: false
@@ -610,7 +755,7 @@ paths:
         schema:
           type: integer
       tags:
-      - loans
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -621,7 +766,7 @@ paths:
                 $ref: '#/components/schemas/PaginatedFinePaymentList'
           description: ''
     post:
-      operationId: loans_fine_payments_create
+      operationId: v1_loans_fine_payments_create
       parameters:
       - in: path
         name: loan_pk
@@ -629,7 +774,7 @@ paths:
           type: integer
         required: true
       tags:
-      - loans
+      - v1
       requestBody:
         content:
           application/json:
@@ -653,7 +798,7 @@ paths:
           description: ''
   /api/v1/loans/{loan_pk}/fine-payments/{payment_id}/:
     get:
-      operationId: loans_fine_payments_retrieve
+      operationId: v1_loans_fine_payments_retrieve
       parameters:
       - in: path
         name: loan_pk
@@ -667,7 +812,7 @@ paths:
         description: A unique integer value identifying this fine payment.
         required: true
       tags:
-      - loans
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -678,7 +823,7 @@ paths:
                 $ref: '#/components/schemas/FinePayment'
           description: ''
     put:
-      operationId: loans_fine_payments_update
+      operationId: v1_loans_fine_payments_update
       parameters:
       - in: path
         name: loan_pk
@@ -692,7 +837,7 @@ paths:
         description: A unique integer value identifying this fine payment.
         required: true
       tags:
-      - loans
+      - v1
       requestBody:
         content:
           application/json:
@@ -715,7 +860,7 @@ paths:
                 $ref: '#/components/schemas/FinePayment'
           description: ''
     patch:
-      operationId: loans_fine_payments_partial_update
+      operationId: v1_loans_fine_payments_partial_update
       parameters:
       - in: path
         name: loan_pk
@@ -729,7 +874,7 @@ paths:
         description: A unique integer value identifying this fine payment.
         required: true
       tags:
-      - loans
+      - v1
       requestBody:
         content:
           application/json:
@@ -751,7 +896,7 @@ paths:
                 $ref: '#/components/schemas/FinePayment'
           description: ''
     delete:
-      operationId: loans_fine_payments_destroy
+      operationId: v1_loans_fine_payments_destroy
       parameters:
       - in: path
         name: loan_pk
@@ -765,7 +910,7 @@ paths:
         description: A unique integer value identifying this fine payment.
         required: true
       tags:
-      - loans
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -773,7 +918,7 @@ paths:
           description: No response body
   /api/v1/loans/{loan_id}/:
     get:
-      operationId: loans_retrieve
+      operationId: v1_loans_retrieve
       parameters:
       - in: path
         name: loan_id
@@ -782,7 +927,7 @@ paths:
         description: A unique integer value identifying this loan.
         required: true
       tags:
-      - loans
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -793,7 +938,7 @@ paths:
                 $ref: '#/components/schemas/Loan'
           description: ''
     put:
-      operationId: loans_update
+      operationId: v1_loans_update
       parameters:
       - in: path
         name: loan_id
@@ -802,7 +947,7 @@ paths:
         description: A unique integer value identifying this loan.
         required: true
       tags:
-      - loans
+      - v1
       requestBody:
         content:
           application/json:
@@ -825,7 +970,7 @@ paths:
                 $ref: '#/components/schemas/Loan'
           description: ''
     patch:
-      operationId: loans_partial_update
+      operationId: v1_loans_partial_update
       parameters:
       - in: path
         name: loan_id
@@ -834,7 +979,7 @@ paths:
         description: A unique integer value identifying this loan.
         required: true
       tags:
-      - loans
+      - v1
       requestBody:
         content:
           application/json:
@@ -856,7 +1001,7 @@ paths:
                 $ref: '#/components/schemas/Loan'
           description: ''
     delete:
-      operationId: loans_destroy
+      operationId: v1_loans_destroy
       parameters:
       - in: path
         name: loan_id
@@ -865,7 +1010,7 @@ paths:
         description: A unique integer value identifying this loan.
         required: true
       tags:
-      - loans
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -873,7 +1018,7 @@ paths:
           description: No response body
   /api/v1/publishers/:
     get:
-      operationId: publishers_list
+      operationId: v1_publishers_list
       parameters:
       - in: query
         name: email
@@ -924,7 +1069,7 @@ paths:
         explode: false
         style: form
       tags:
-      - publishers
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -935,9 +1080,9 @@ paths:
                 $ref: '#/components/schemas/PaginatedPublisherList'
           description: ''
     post:
-      operationId: publishers_create
+      operationId: v1_publishers_create
       tags:
-      - publishers
+      - v1
       requestBody:
         content:
           application/json:
@@ -961,7 +1106,7 @@ paths:
           description: ''
   /api/v1/publishers/{publisher_id}/:
     get:
-      operationId: publishers_retrieve
+      operationId: v1_publishers_retrieve
       parameters:
       - in: path
         name: publisher_id
@@ -970,7 +1115,7 @@ paths:
         description: A unique integer value identifying this publisher.
         required: true
       tags:
-      - publishers
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -981,7 +1126,7 @@ paths:
                 $ref: '#/components/schemas/Publisher'
           description: ''
     put:
-      operationId: publishers_update
+      operationId: v1_publishers_update
       parameters:
       - in: path
         name: publisher_id
@@ -990,7 +1135,7 @@ paths:
         description: A unique integer value identifying this publisher.
         required: true
       tags:
-      - publishers
+      - v1
       requestBody:
         content:
           application/json:
@@ -1013,7 +1158,7 @@ paths:
                 $ref: '#/components/schemas/Publisher'
           description: ''
     patch:
-      operationId: publishers_partial_update
+      operationId: v1_publishers_partial_update
       parameters:
       - in: path
         name: publisher_id
@@ -1022,7 +1167,7 @@ paths:
         description: A unique integer value identifying this publisher.
         required: true
       tags:
-      - publishers
+      - v1
       requestBody:
         content:
           application/json:
@@ -1044,7 +1189,7 @@ paths:
                 $ref: '#/components/schemas/Publisher'
           description: ''
     delete:
-      operationId: publishers_destroy
+      operationId: v1_publishers_destroy
       parameters:
       - in: path
         name: publisher_id
@@ -1053,7 +1198,7 @@ paths:
         description: A unique integer value identifying this publisher.
         required: true
       tags:
-      - publishers
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -1061,7 +1206,7 @@ paths:
           description: No response body
   /api/v1/shelves/:
     get:
-      operationId: shelves_list
+      operationId: v1_shelves_list
       parameters:
       - name: limit
         required: false
@@ -1100,7 +1245,7 @@ paths:
         explode: false
         style: form
       tags:
-      - shelves
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -1111,9 +1256,9 @@ paths:
                 $ref: '#/components/schemas/PaginatedShelfList'
           description: ''
     post:
-      operationId: shelves_create
+      operationId: v1_shelves_create
       tags:
-      - shelves
+      - v1
       requestBody:
         content:
           application/json:
@@ -1137,7 +1282,7 @@ paths:
           description: ''
   /api/v1/shelves/{shelf_id}/:
     get:
-      operationId: shelves_retrieve
+      operationId: v1_shelves_retrieve
       parameters:
       - in: path
         name: shelf_id
@@ -1146,7 +1291,7 @@ paths:
         description: A unique integer value identifying this shelf.
         required: true
       tags:
-      - shelves
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -1157,7 +1302,7 @@ paths:
                 $ref: '#/components/schemas/Shelf'
           description: ''
     put:
-      operationId: shelves_update
+      operationId: v1_shelves_update
       parameters:
       - in: path
         name: shelf_id
@@ -1166,7 +1311,7 @@ paths:
         description: A unique integer value identifying this shelf.
         required: true
       tags:
-      - shelves
+      - v1
       requestBody:
         content:
           application/json:
@@ -1189,7 +1334,7 @@ paths:
                 $ref: '#/components/schemas/Shelf'
           description: ''
     patch:
-      operationId: shelves_partial_update
+      operationId: v1_shelves_partial_update
       parameters:
       - in: path
         name: shelf_id
@@ -1198,7 +1343,7 @@ paths:
         description: A unique integer value identifying this shelf.
         required: true
       tags:
-      - shelves
+      - v1
       requestBody:
         content:
           application/json:
@@ -1220,7 +1365,7 @@ paths:
                 $ref: '#/components/schemas/Shelf'
           description: ''
     delete:
-      operationId: shelves_destroy
+      operationId: v1_shelves_destroy
       parameters:
       - in: path
         name: shelf_id
@@ -1229,7 +1374,7 @@ paths:
         description: A unique integer value identifying this shelf.
         required: true
       tags:
-      - shelves
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -1237,12 +1382,12 @@ paths:
           description: No response body
   /api/v1/token/:
     post:
-      operationId: token_create
+      operationId: v1_token_create
       description: |-
         Takes a set of user credentials and returns an access and refresh JSON web
         token pair to prove the authentication of those credentials.
       tags:
-      - token
+      - v1
       requestBody:
         content:
           application/json:
@@ -1264,12 +1409,12 @@ paths:
           description: ''
   /api/v1/token/refresh/:
     post:
-      operationId: token_refresh_create
+      operationId: v1_token_refresh_create
       description: |-
         Takes a refresh type JSON web token and returns an access type JSON web
         token if the refresh token is valid.
       tags:
-      - token
+      - v1
       requestBody:
         content:
           application/json:
@@ -1291,7 +1436,7 @@ paths:
           description: ''
   /api/v1/users/:
     get:
-      operationId: users_list
+      operationId: v1_users_list
       parameters:
       - in: query
         name: email
@@ -1398,7 +1543,7 @@ paths:
         schema:
           type: string
       tags:
-      - users
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -1409,9 +1554,9 @@ paths:
                 $ref: '#/components/schemas/PaginatedUserList'
           description: ''
     post:
-      operationId: users_create
+      operationId: v1_users_create
       tags:
-      - users
+      - v1
       requestBody:
         content:
           application/json:
@@ -1435,7 +1580,7 @@ paths:
           description: ''
   /api/v1/users/{username}/:
     get:
-      operationId: users_retrieve
+      operationId: v1_users_retrieve
       parameters:
       - in: path
         name: username
@@ -1443,7 +1588,7 @@ paths:
           type: string
         required: true
       tags:
-      - users
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -1454,7 +1599,7 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
     put:
-      operationId: users_update
+      operationId: v1_users_update
       parameters:
       - in: path
         name: username
@@ -1462,7 +1607,7 @@ paths:
           type: string
         required: true
       tags:
-      - users
+      - v1
       requestBody:
         content:
           application/json:
@@ -1485,7 +1630,7 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
     patch:
-      operationId: users_partial_update
+      operationId: v1_users_partial_update
       parameters:
       - in: path
         name: username
@@ -1493,7 +1638,7 @@ paths:
           type: string
         required: true
       tags:
-      - users
+      - v1
       requestBody:
         content:
           application/json:
@@ -1515,7 +1660,7 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
     delete:
-      operationId: users_destroy
+      operationId: v1_users_destroy
       parameters:
       - in: path
         name: username
@@ -1523,7 +1668,7 @@ paths:
           type: string
         required: true
       tags:
-      - users
+      - v1
       security:
       - jwtAuth: []
       responses:
@@ -1531,7 +1676,7 @@ paths:
           description: No response body
   /api/v1/users/{username}/change_password/:
     post:
-      operationId: users_change_password_create
+      operationId: v1_users_change_password_create
       description: Change user password
       parameters:
       - in: path
@@ -1540,7 +1685,7 @@ paths:
           type: string
         required: true
       tags:
-      - users
+      - v1
       requestBody:
         content:
           application/json:
@@ -1564,7 +1709,7 @@ paths:
           description: ''
   /api/v1/users/{username}/reactivate/:
     post:
-      operationId: users_reactivate_create
+      operationId: v1_users_reactivate_create
       description: Reactivate a deactivated user
       parameters:
       - in: path
@@ -1573,7 +1718,7 @@ paths:
           type: string
         required: true
       tags:
-      - users
+      - v1
       requestBody:
         content:
           application/json:
@@ -1597,10 +1742,10 @@ paths:
           description: ''
   /api/v1/users/register/:
     post:
-      operationId: users_register_create
+      operationId: v1_users_register_create
       description: Public registration endpoint
       tags:
-      - users
+      - v1
       requestBody:
         content:
           application/json:
@@ -1667,7 +1812,7 @@ components:
           type: integer
           nullable: true
         available_copies:
-          type: string
+          type: integer
           readOnly: true
       required:
       - author
@@ -1736,7 +1881,7 @@ components:
           type: string
           format: uuid
         is_overdue:
-          type: string
+          type: boolean
           readOnly: true
         created_at:
           type: string
@@ -1958,7 +2103,7 @@ components:
           type: integer
           nullable: true
         available_copies:
-          type: string
+          type: integer
           readOnly: true
     PatchedFinePayment:
       type: object
@@ -2011,7 +2156,7 @@ components:
           type: string
           format: uuid
         is_overdue:
-          type: string
+          type: boolean
           readOnly: true
         created_at:
           type: string
