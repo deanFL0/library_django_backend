@@ -3,24 +3,20 @@ from rest_framework import permissions
 class IsUser(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user and request.user.is_authenticated:
-            return request.user.role == "user"
+            return request.user.role == "user" or request.user.role == 'admin'
         return False
     
     def has_object_permission(self, request, view, obj):
-        if request.user and request.user.is_authenticated:
-            return obj.user == request.user
-        return False
+            return request.user.role == "user" or request.user.role == 'admin'
     
 class IsLibrarian(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user and request.user.is_authenticated:
-            return request.user.role == "librarian"
+            return request.user.role == "librarian" or request.user.role == 'admin'
         return False
     
     def has_object_permission(self, request, view, obj):
-        if request.user and request.user.is_authenticated:
-            return request.user.role == "librarian"
-        return False
+        return request.user.role == "librarian" or request.user.role == 'admin'
     
 class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -28,39 +24,31 @@ class IsAdmin(permissions.BasePermission):
             return request.user.role == "admin"
         return False
     def has_object_permission(self, request, view, obj):
-        if request.user and request.user.is_authenticated:
-            return request.user.role == "admin"
-        return False
+        return request.user.role == "admin"
     
 class IsOwner(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.user and request.user.is_authenticated:
-            return request.user.role == "user"
-        return
+        return request.user and request.user.is_authenticated
     
     def has_object_permission(self, request, view, obj):
-        if request.user and request.user.is_authenticated:
-            return obj.user == request.user
-        return False
+        return getattr(obj, "user", obj) == request.user
     
 class IsOwnerOrLibrarian(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and (
-            request.user.role == "user" or request.user.role == "librarian"
+            request.user.role == "user" or request.user.role == "librarian" or request.user.role == 'admin'
         )
 
     def has_object_permission(self, request, view, obj):
-        return request.user.is_authenticated and (
-            request.user.role == "librarian" or obj.user == request.user
-        )
+        if request.user.role == "librarian" or request.user.role == 'admin':
+            return True
+        return getattr(obj, "user", obj) == request.user 
     
 class IsOwnerOrAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.user and request.user.is_authenticated:
-            return request.user.role == "user" or request.user.role == "admin"
-        return False
+        return request.user and request.user.is_authenticated
     
     def has_object_permission(self, request, view, obj):
-        if request.user and request.user.is_authenticated:
-            return obj.user == request.user or request.user.role == "admin"
-        return False
+        if request.user.role == "admin":
+            return True
+        return getattr(obj, "user", obj) == request.user
