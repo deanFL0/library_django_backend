@@ -136,6 +136,16 @@ REST_FRAMEWORK = {
     ),
     'PAGE_SIZE': 25,
     "MAX_LIMIT": 100,
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'library.throttles.BurstRateThrottle',
+        'library.throttles.SustainedRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '15/min',
+        'burst': '60/min',
+        'sustained': '500/day'
+    }
 }
 
 SIMPLE_JWT = {
